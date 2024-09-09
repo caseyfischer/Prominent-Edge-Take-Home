@@ -1,11 +1,14 @@
 import './App.css'
-import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, MapControl, ControlPosition, Marker } from '@vis.gl/react-google-maps';
 import { useFilePicker } from 'use-file-picker';
 import { useState } from 'react';
 
 type Incident = {
-    name: string,
-    content: string
+    fileName: string,
+    content: string,
+    latitude: number,
+    longitude: number,
+    placeName: string | undefined
 }
 
 function App() {
@@ -23,11 +26,18 @@ function App() {
             // this library seems to have missing type annotations for this callback..?
             try {
                 console.log('onFilesSuccessfullySelected', filesContent);
+                // the file picker component gives us an array regardless of number of files, hence the [0]
                 const fileName = filesContent[0].name;
-                const json = filesContent[0].content;
+                const json = JSON.parse(filesContent[0].content);
+                const lat = json.address.latitude;
+                const lng = json.address.longitude;
+
                 const newIncident: Incident = {
-                    name: fileName,
-                    content: json
+                    fileName,
+                    content: json,
+                    latitude: lat,
+                    longitude: lng,
+                    placeName: json.address.common_place_name
                 }
                 setIncident(newIncident);
             } catch (e) {
@@ -38,20 +48,25 @@ function App() {
 
     return (
         <>
-            <button onClick={openFilePicker}>Select File</button>
             <APIProvider apiKey={API_KEY}>
                 <Map
-                    style={{ width: '60vw', height: '60vh' }}
+                    style={{ width: '100vw', height: '100vh' }}
                     defaultCenter={{ lat: 37.5407, lng: -77.4360 }}
                     defaultZoom={11}
                     gestureHandling={'greedy'}
                     disableDefaultUI={true}
+                    center={incident ? { lat: incident.latitude, lng: incident.longitude } : null}
                 >
-                    <Marker position={{ lat: 37.5407, lng: -77.4360 }} />
+                    <MapControl position={ControlPosition.TOP_LEFT}>
+                        <button id="fileButton" onClick={openFilePicker}>Select File</button>
+                    </MapControl>
+                    {
+                        incident && <Marker position={{ lat: incident.latitude, lng: incident.longitude }} />
+                    }
                 </Map>
             </APIProvider>
             <pre>
-                {!loading && incident && incident.content}
+                {!loading && incident && JSON.stringify(incident.content, undefined, 4)}
             </pre>
         </>
     )
