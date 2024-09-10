@@ -16,6 +16,8 @@ incident details view, which is simply displayed as a JSON blob with no styling.
 
 i also would have liked to spend more time on making it look prettier--but alas!
 
+in total i spent about 5 and a half hours coding this.
+
 ## Setup
 
 after cloning the repo, run `npm install` from inside the directory.
@@ -23,7 +25,7 @@ after cloning the repo, run `npm install` from inside the directory.
 you will need API keys for google maps and meteostat (these are both available for
 free).
 
-create a `.env` file containing these API keys:
+create a `.env` file at the top level of this directory containing these API keys:
 
 ```js
 VITE_GOOGLE_MAPS_API_KEY="your google maps api key here!!"
