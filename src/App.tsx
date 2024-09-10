@@ -58,7 +58,6 @@ function App() {
                     style={{ width: '100vw', height: '100vh' }}
                     defaultCenter={{ lat: 37.5407, lng: -77.4360 }}
                     defaultZoom={11}
-                    gestureHandling={'greedy'}
                     disableDefaultUI={true}
                     center={incident ? { lat: incident.latitude, lng: incident.longitude } : null}
                 >
