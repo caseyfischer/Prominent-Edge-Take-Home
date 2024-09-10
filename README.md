@@ -1,50 +1,47 @@
-# React + TypeScript + Vite
+# Casey Fischer Prominent Edge Take-Home Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+welcome to my (hopefully) helpful and convenient readme!
 
-Currently, two official plugins are available:
+i ended up with a very limited but functional solution. the main areas that
+i would have liked to improve are brittleness (e.g. it will not work with files
+that are formatted any differently from the sample data) and security (API keys
+are visible to the client). i also would have liked to add a "download" button
+so that users can persist the enriched data as a .json file, in the format it
+was originally provided. this would have been a quick add but i ran out of time.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+i chose to implement this project as a completely client side application. users
+will choose a file to enrich right from the map view, and a marker will appear
+on the map showing the location of the incident. click the marker to toggle the
+incident details view, which is simply displayed as a JSON blob with no styling.
 
-## Expanding the ESLint configuration
+i also would have liked to spend more time on making it look prettier--but alas!
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Setup
 
-- Configure the top-level `parserOptions` property like this:
+after cloning the repo, run `npm install` from inside the directory.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+you will need API keys for google maps and meteostat (these are both available for
+free).
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+create a `.env` file containing these API keys:
 
 ```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+VITE_GOOGLE_MAPS_API_KEY="your google maps api key here!!"
+VITE_METEOSTAT_API_KEY="your meteostat api key here!!"
 ```
+
+then `npm run dev` to start the development server.
+
+## Usage
+
+visit `http://localhost:5173` in your web browser of choice. you should see a google
+maps view showing beautiful richmond, VA. click the "Select File" button and choose 
+an input file. the enriched data will appear in the window. you can click the map
+marker to toggle this window, and scroll within the data shown inside it.
+
+## Thanks!
+
+thanks for the opportunity to apply at Prominent Edge. i enjoyed working on this
+project and hope you like what i came up with!
+
+- casey
