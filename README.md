@@ -22,7 +22,7 @@ in total i spent about 5 and a half hours coding this.
 
 after cloning the repo, run `npm install` from inside the directory.
 
-you will need API keys for google maps and meteostat (these are both available for
+you will need API keys for [google maps](https://console.cloud.google.com/apis/library/maps-backend.googleapis.com) and [meteostat](https://rapidapi.com/meteostat/api/meteostat/pricing) (these are both available for
 free).
 
 create a `.env` file at the top level of this directory containing these API keys:
