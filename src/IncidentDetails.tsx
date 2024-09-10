@@ -3,12 +3,11 @@ import type { Incident } from './Incident';
 import { Dispatch, SetStateAction } from "react";
 
 type Props = {
-    loading: boolean
     incident: Incident | undefined,
-    setOpen: Dispatch<SetStateAction<boolean>>
+    setOpen: Dispatch<SetStateAction<boolean>>,
 }
 
-function IncidentDetails({ loading, incident, setOpen }: Props) {
+function IncidentDetails({ incident, setOpen }: Props) {
     return (
         <InfoWindow
             className='info'
@@ -17,9 +16,9 @@ function IncidentDetails({ loading, incident, setOpen }: Props) {
             pixelOffset={[0, -30]}
             headerContent={<h2>{incident?.placeName}</h2>}
         >
-            {!loading && <pre>
-                {incident && JSON.stringify(incident.content, undefined, 4)}
-            </pre>}
+            <pre>
+                {incident && JSON.stringify(incident.details, undefined, 4)}
+            </pre>
         </InfoWindow>
     )
 }

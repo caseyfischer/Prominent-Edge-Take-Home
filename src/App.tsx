@@ -4,17 +4,19 @@ import { useFilePicker } from 'use-file-picker';
 import { useState } from 'react';
 import type { Incident } from './Incident';
 import IncidentDetails from './IncidentDetails';
+import { WeatherUtils } from './WeatherUtils';
 
 function App() {
     // this isn't a secure way to use the API key (it's exposed to the client)
-    const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
+    const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
+
     const [incident, setIncident] = useState<Incident | undefined>(undefined);
     const [infoOpen, setInfoOpen] = useState<boolean>(false);
     const toggleInfoWindow = () => {
         setInfoOpen(!infoOpen);
     }
 
-    const { openFilePicker, loading } = useFilePicker({
+    const { openFilePicker } = useFilePicker({
         accept: '.json',
         multiple: false,
         onFilesRejected: ({ errors }) => {
@@ -23,7 +25,6 @@ function App() {
         onFilesSuccessfullySelected: ({ filesContent }) => {
             // this library seems to have missing type annotations for this callback..?
             try {
-                console.log('onFilesSuccessfullySelected', filesContent);
                 // the file picker component gives us an array regardless of number of files, hence the [0]
                 const fileName = filesContent[0].name;
                 const json = JSON.parse(filesContent[0].content);
@@ -32,21 +33,27 @@ function App() {
 
                 const newIncident: Incident = {
                     fileName,
-                    content: json,
+                    details: json,
                     latitude: lat,
                     longitude: lng,
-                    placeName: json.address.common_place_name
+                    placeName: json.address.common_place_name,
+                    startTime: new Date(json.description.event_opened),
+                    endTime: new Date(json.description.event_closed),
                 }
-                setIncident(newIncident);
+                WeatherUtils.enrichIncident(newIncident).then((enrichedIncident) => {
+                    setIncident(enrichedIncident);
+                    console.log(enrichedIncident);
+                    setInfoOpen(true);
+                })
             } catch (e) {
-                alert(`Import failed with error:\n\n${e}!\n\nTry again while wearing tinfoil hat`);
+                alert(`Import failed with error:\n\n${e}\n\nTry again while wearing tinfoil hat`);
             }
         }
     });
 
     return (
         <>
-            <APIProvider apiKey={API_KEY}>
+            <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
                 <Map
                     style={{ width: '100vw', height: '100vh' }}
                     defaultCenter={{ lat: 37.5407, lng: -77.4360 }}
@@ -65,7 +72,7 @@ function App() {
                                 onClick={toggleInfoWindow}
                             />
 
-                            {infoOpen && <IncidentDetails loading={loading} incident={incident} setOpen={setInfoOpen} />}
+                            {infoOpen && <IncidentDetails incident={incident} setOpen={setInfoOpen} />}
                         </>
                     }
                     <MapControl position={ControlPosition.LEFT_CENTER}>
