@@ -6,7 +6,7 @@ export class WeatherUtils {
     // this should really live only on the server. i'm just saving time by leaving it here
     // (you will need to define VITE_METEOSTAT_API_KEY in your .env file to make this work)
     static #METEOSTAT_API_KEY = import.meta.env.VITE_METEOSTAT_API_KEY as string;
-    static #METEOSTAT_URL = "http://localhost:5173/weatherr";
+    static #METEOSTAT_URL = "http://localhost:5173/weather";
     static #TIMEZONE = "US/Eastern"; // this would be dynamic IRL
 
     private static formatDate(date: Date): string {
