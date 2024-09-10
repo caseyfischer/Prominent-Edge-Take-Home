@@ -5,3 +5,7 @@
     margin-left: 40px;
     margin-top: 40px;
 }
+
+.info {
+    max-height: 300px;
+}

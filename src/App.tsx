@@ -2,19 +2,17 @@ import './App.css'
 import { APIProvider, Map, MapControl, ControlPosition, Marker } from '@vis.gl/react-google-maps';
 import { useFilePicker } from 'use-file-picker';
 import { useState } from 'react';
-
-type Incident = {
-    fileName: string,
-    content: string,
-    latitude: number,
-    longitude: number,
-    placeName: string | undefined
-}
+import type { Incident } from './Incident';
+import IncidentDetails from './IncidentDetails';
 
 function App() {
     // this isn't a secure way to use the API key (it's exposed to the client)
     const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
     const [incident, setIncident] = useState<Incident | undefined>(undefined);
+    const [infoOpen, setInfoOpen] = useState<boolean>(false);
+    const toggleInfoWindow = () => {
+        setInfoOpen(!infoOpen);
+    }
 
     const { openFilePicker, loading } = useFilePicker({
         accept: '.json',
@@ -61,13 +59,20 @@ function App() {
                         <button id="fileButton" onClick={openFilePicker}>Select File</button>
                     </MapControl>
                     {
-                        incident && <Marker position={{ lat: incident.latitude, lng: incident.longitude }} />
+                        incident && <>
+                            <Marker
+                                position={{ lat: incident.latitude, lng: incident.longitude }}
+                                onClick={toggleInfoWindow}
+                            />
+
+                            {infoOpen && <IncidentDetails loading={loading} incident={incident} setOpen={setInfoOpen} />}
+                        </>
                     }
+                    <MapControl position={ControlPosition.LEFT_CENTER}>
+                        <div>foo!</div>
+                    </MapControl>
                 </Map>
             </APIProvider>
-            <pre>
-                {!loading && incident && JSON.stringify(incident.content, undefined, 4)}
-            </pre>
         </>
     )
 }
